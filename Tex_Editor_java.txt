@@ -1,0 +1,57 @@
+import java.io.*;
+import java.util.*;
+
+public class Solution {
+ static Stack<Character>undo=new Stack<>();
+ static Stack<Character>redo=new Stack<>();
+    
+    public static void writeOperation(char x){
+        undo.push(x);
+    }
+    public static void undoOperation(){
+        if(undo.size()==0){
+            System.out.println("You can't perform undo operation");
+            return;
+        }
+        redo.push(undo.pop());
+    }
+    public static void redoOperation(){
+        if(redo.size()==0){
+            System.out.println("You can't perform redo operation");
+            return;
+        }
+        undo.push(redo.pop());
+    }
+    public static void readOperation(){
+        Stack<Character>read=new Stack<>();
+        while(undo.size()>0){
+            System.out.println(undo.peek());
+            read.push(undo.pop());
+        }
+        System.out.println("Read operation starts: ");
+        
+        while(read.size()>0){
+            System.out.print(read.peek()+" ");
+            undo.push(read.pop());
+        }
+        System.out.println("Read operation completed");
+    }
+    
+    public static void callFun(String data[]){
+        for(int i=0;i<data.length;i++){
+            if(data[i].equals("READ")){
+                readOperation();
+            }else if(data[i].equals("UNDO")){
+                undoOperation();
+            }else if(data[i].equals("REDO")){
+                redoOperation();
+            }else{
+                writeOperation(data[i].charAt(6));
+            }
+        }
+    }
+    public static void main(String[] args) {
+      String data[]={"WRITE A","WRITE B","READ","UNDO","WRITE C"," REDO","READ"};
+       callFun(data); 
+    }
+}
